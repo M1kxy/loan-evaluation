@@ -74,7 +74,7 @@ public class LoanEvaluationService {
             }
 
             // Offer rule: EMI > 50%
-            if (emi.compareTo(fiftyPercentIncome) > 0) {
+            else if (emi.compareTo(fiftyPercentIncome) > 0) {
                 rejectionReasons.add("EMI_EXCEEDS_50_PERCENT");
             }
 
