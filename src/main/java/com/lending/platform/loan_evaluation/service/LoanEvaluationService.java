@@ -5,6 +5,7 @@ import com.lending.platform.loan_evaluation.util.EmiCalculator;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class LoanEvaluationService {
     private final InterestRateService interestRateService;
 
     public LoanEvaluationService(RiskAssessmentService riskService,
-                                 InterestRateService interestRateService) {
+            InterestRateService interestRateService) {
         this.riskService = riskService;
         this.interestRateService = interestRateService;
     }
@@ -34,8 +35,13 @@ public class LoanEvaluationService {
         }
 
         // Rule 2: Age + tenure (years) > 65
-        int tenureYears = loan.getTenureMonths() / 12;
-        if (applicant.getAge() + tenureYears > 65) {
+        BigDecimal tenureYears = BigDecimal.valueOf(loan.getTenureMonths())
+                .divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+
+        BigDecimal agePlusTenure = BigDecimal.valueOf(applicant.getAge())
+                .add(tenureYears);
+
+        if (agePlusTenure.compareTo(BigDecimal.valueOf(65)) > 0) {
             rejectionReasons.add("AGE_TENURE_LIMIT_EXCEEDED");
         }
 
@@ -51,20 +57,16 @@ public class LoanEvaluationService {
             interestRate = interestRateService.calculateFinalInterestRate(
                     riskBand,
                     applicant.getEmploymentType(),
-                    loan.getAmount()
-            );
+                    loan.getAmount());
 
             emi = EmiCalculator.calculateEmi(
                     loan.getAmount(),
                     interestRate,
-                    loan.getTenureMonths()
-            );
+                    loan.getTenureMonths());
 
-            BigDecimal sixtyPercentIncome =
-                    applicant.getMonthlyIncome().multiply(BigDecimal.valueOf(0.6));
+            BigDecimal sixtyPercentIncome = applicant.getMonthlyIncome().multiply(BigDecimal.valueOf(0.6));
 
-            BigDecimal fiftyPercentIncome =
-                    applicant.getMonthlyIncome().multiply(BigDecimal.valueOf(0.5));
+            BigDecimal fiftyPercentIncome = applicant.getMonthlyIncome().multiply(BigDecimal.valueOf(0.5));
 
             // Rule 3: EMI > 60%
             if (emi.compareTo(sixtyPercentIncome) > 0) {
