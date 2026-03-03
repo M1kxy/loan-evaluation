@@ -3,9 +3,12 @@ package com.lending.platform.loan_evaluation.dto.response;
 import com.lending.platform.loan_evaluation.domain.ApplicationStatus;
 import com.lending.platform.loan_evaluation.domain.RiskBand;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoanApplicationResponse {
 
     private UUID applicationId;
@@ -15,7 +18,7 @@ public class LoanApplicationResponse {
     private List<String> rejectionReasons;
 
     // getters & setters
-    
+
     public UUID getApplicationId() {
         return applicationId;
     }
