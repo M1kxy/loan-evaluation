@@ -15,7 +15,7 @@ public class RiskAssessmentService {
         } else if (creditScore >= 600) {
             return RiskBand.HIGH;
         } else {
-            return null; // below 600 handled as rejection
+            return RiskBand.HIGH; // reject application if credit score is below 600
         }
     }
 }

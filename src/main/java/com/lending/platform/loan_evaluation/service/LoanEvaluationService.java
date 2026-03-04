@@ -50,7 +50,6 @@ public class LoanEvaluationService {
         BigDecimal emi = null;
         BigDecimal totalPayable = null;
 
-        if (rejectionReasons.isEmpty()) {
 
             riskBand = riskService.classifyRisk(applicant.getCreditScore());
 
@@ -79,7 +78,7 @@ public class LoanEvaluationService {
             }
 
             totalPayable = emi.multiply(BigDecimal.valueOf(loan.getTenureMonths()));
-        }
+        
 
         application.setRiskBand(riskBand);
         application.setInterestRate(interestRate);
@@ -91,6 +90,7 @@ public class LoanEvaluationService {
             application.setStatus(ApplicationStatus.APPROVED);
         } else {
             application.setStatus(ApplicationStatus.REJECTED);
+            application.setRiskBand(null);
             application.setRejectionReasons(String.join(",", rejectionReasons));
         }
 
