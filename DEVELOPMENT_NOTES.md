@@ -17,11 +17,11 @@ and generates a single offer based on the requested term.
 1.  Request received in Controller.
 2.  Request DTO validated using Bean Validation and invalid requests returns HTTP 400 with meaningful error messages.
 3.  LoanEvaluationService orchestrates:
-    -   Eligibility checks\
-    -   Risk band classification\
-    -   Interest rate calculation\
-    -   EMI calculation using EmiCalculator\
-    -   Offer generation logic\
+    -   Eligibility checks
+    -   Risk band classification
+    -   Interest rate calculation
+    -   EMI calculation using EmiCalculator
+    -   Offer generation logic
 4.  Decision (APPROVED / REJECTED) is persisted using
 LoanDecisionAuditRepository.
 5.  Structured response returned as per assignment specification.
@@ -36,23 +36,23 @@ RoundingMode.HALF_UP to ensure monetary precision.
 ### 1. Domain-Driven Separation
 
 Domain entities (Applicant, Loan, LoanApplication) are separated from
-DTOs to maintain a clean boundary between: - API contracts\
+DTOs to maintain a clean boundary between: - API contracts
 - Core business logic
 
 This prevents request/response models from leaking into domain logic.
 
 ------------------------------------------------------------------------
 
-### 2. Service Layer Abstraction
+### 2. Store in Database + Provide schema.sql
+for Audit Trail and Compliance
 
-Business responsibilities are separated into dedicated services:
+Persisting all loan decisions in a relational database via `schema.sql` ensures:
 
--   LoanEvaluationService -- Main orchestration layer\
--   RiskAssessmentService -- Determines risk band based on credit score\
--   InterestRateService -- Calculates final interest rate using base
-    rate + premiums
+- Centralized storage prevents data loss and enables ACID transactions.
+- SQL enables efficient historical analysis, reporting, and decision traceability.
+- Database constraints enforce data validity across the application lifecycle.
 
-This separation improves readability, testability, and maintainability.
+Alternative approaches (in-memory, file-based) were rejected due to scalability and durability concerns.
 
 ------------------------------------------------------------------------
 
@@ -156,8 +156,8 @@ system, a rule engine or policy framework would improve extensibility.
 
 ### 1. Configuration Externalization
 
-Move configurable values such as: - Base interest rate\
-- Risk premiums\
+Move configurable values such as: - Base interest rate
+- Risk premiums
 - Income thresholds (50%, 60%)
 
 to application.yml for easy access and if change required.
@@ -166,7 +166,7 @@ to application.yml for easy access and if change required.
 
 ### 2. Caching Layer
 
-Introduce cache: - Risk band thresholds\
+Introduce cache: - Risk band thresholds
 - Interest rate configurations
 
 This would reduce computation time in scenarios where data is high volume.
@@ -194,18 +194,18 @@ Integrate this loan evaluation service into a banking platform:
 
 ### 6. Observability & Monitoring
 
-Add: - Micrometer metrics\
-- Prometheus integration\
-- Structured logging\
+Add: - Micrometer metrics
+- Prometheus integration
+- Structured logging
 - Request correlation IDs
 
 ------------------------------------------------------------------------
 
 ### 7. Expanded Test Coverage
 
-Increase coverage with: - Boundary condition tests\
-- Full integration tests\
-- Repository-level tests\
+Increase coverage with: - Boundary condition tests
+- Full integration tests
+- Repository-level tests
 - Performance benchmarking tests
 
 ------------------------------------------------------------------------
@@ -213,14 +213,14 @@ Increase coverage with: - Boundary condition tests\
 ## Refactoring & Development Evolution
 
 The project was developed incrementally with logical separation of
-commits: - Initial project setup\
-- Domain modeling\
-- Validation implementation\
-- EMI calculation utility\
-- Risk and interest logic\
-- Offer generation\
-- Response formatting corrections\
-- Audit persistence\
-- Unit Test Cases\
+commits: - Initial project setup
+- Domain modeling
+- Validation implementation
+- EMI calculation utility
+- Risk and interest logic
+- Offer generation
+- Response formatting corrections
+- Audit persistence
+- Unit Test Cases
 - Refactoring and cleanup
 
