@@ -9,9 +9,12 @@ The code is present in develop branch
 - Maven 3.6+
 
 ### Setting up the Project
-- Run git clone https://github.com/M1kxy/loan-evaluation.git in a folder
-- cd loan-evaluation
-- git checkout develop
+- Run 
+```bash
+git clone https://github.com/M1kxy/loan-evaluation.git
+cd loan-evaluation
+git checkout develop
+```
 
 ### Running the Application
 ```bash
