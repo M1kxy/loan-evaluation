@@ -141,13 +141,11 @@ system, a rule engine or policy framework would improve extensibility.
 
 ## Assumptions Made
 
--   Applicants have a stable employment type during evaluation.
 -   Interest rates are calculated dynamically via InterestRateService.
--   Loan purposes are predefined in the LoanPurpose enum.
+-   Loan purposes, EmploymentType, ApplicationStatus are predefined in the LoanPurpose enum.
 -   EMI calculation follows the standard amortization formula.
--   Tenure-based age validation uses year conversion derived from tenure
-    in months.
 -   Only one offer is generated using the requested tenure.
+-   Tenure-based age validation uses year conversion derived from tenure in months.
 -   Calculation of AGE_TENURE_LIMIT_EXCEEDED validates that applicant age plus loan tenure (in years) does not exceed 65, using BigDecimal for precise fractional year conversion from tenure months.
 
 ------------------------------------------------------------------------
